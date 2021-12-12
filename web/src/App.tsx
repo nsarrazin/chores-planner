@@ -1,10 +1,21 @@
 import * as React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { Button, ButtonGroup, List, ListItem, TextField, Box, Typography, Divider, createTheme, ThemeProvider} from '@mui/material';
+import { Button, ButtonGroup, List, ListItem, TextField, Box, Typography, createTheme, ThemeProvider} from '@mui/material';
 import DraggableList from './components/DraggableList';
-import './App.css';
+import { SocketContext, socket } from './context/socket';
+import {ModalResult} from './components/Modal';
 
+import './App.css';
 import '@fontsource/roboto/400.css';
+
+interface Data{
+  users: string[],
+  elements: string [],
+  order?: string[][]
+  params?: Params
+}
+
+interface Params{}
 
 const useStyles = makeStyles({
   input:{
@@ -20,6 +31,14 @@ const useStyles = makeStyles({
     height: "100vh",
     width:"100vw"
   },
+  userBox:{
+    borderRadius:"10px",
+    borderWidth:"2px",
+    borderStyle:"solid",
+    padding:"4px",
+    height:"fit-content",
+    borderColor:"#DDCA7D"
+  }
 });
 
 const theme = createTheme({
@@ -39,6 +58,7 @@ const theme = createTheme({
     allVariants: {
       color: "#DDCA7D"
     },
+
   },
 });
 
@@ -46,8 +66,10 @@ const theme = createTheme({
 const App = () => {
   const classes = useStyles();
   const [users, setUsers] = React.useState(["user A", "user B"])
-  const [elements, setElements] = React.useState(["element 1", "element 2"])
+  const [elements, setElements] = React.useState(["task 1", "task 2"])
   const [order, setOrder] = React.useState<string[][]>();
+
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   function handleIncrementUsers() {
     setUsers([...users, "user"]);
@@ -58,7 +80,7 @@ const App = () => {
   };
 
   function handleIncrementElements() {
-    setElements([...elements, "element"]);
+    setElements([...elements, "task"]);
   };
   
   function handleDecrementElements(){
@@ -113,13 +135,20 @@ const App = () => {
     setOrder(array);
   }
 
-  React.useEffect(()=>{handleMatrixChange()}, [])
+  React.useEffect(()=>{handleMatrixChange()}, [elements, users])
+
+  function handlePush(){
+    let data:Data={users:users, elements:elements, order:order};
+    socket.emit("request", data);
+    setModalOpen(true);
+  }
 
   return (
     <ThemeProvider theme={theme}>
+      <SocketContext.Provider value={socket}>
       <div className={classes.root}>
         <div> 
-          <Typography variant="h1" marginTop="0">
+          <Typography variant="h1" marginTop="0" paddingTop="5vh" paddingBottom="3vh">
             Chores Planner
           </Typography>
           <Box className={classes.input}>
@@ -133,7 +162,7 @@ const App = () => {
             </div>
             <div>
             <Typography variant="h3">
-            Elements
+            Tasks
             </Typography>
               <ButtonGroup>
                 {elementsButtons}
@@ -141,34 +170,33 @@ const App = () => {
             </div>
           </Box>
         </div>
-        <Divider />
         <div>
           <Box flexDirection="row" display="flex" justifyContent="space-around" margin="5vw" flexWrap="wrap">
             <List style={{"marginTop":"1.4375em", "paddingTop":"32px"}}>
               {elements.map((el, idx) => (
               <ListItem key={idx}>
-                <TextField label={"Element " + String(idx)}
+                <TextField label={"Task " + String(idx)}
                 value={el} variant="outlined"
                 onChange={(event) => (updateElement(idx, event.target.value))}/>
               </ListItem>
               ))}
             </List>
             {users.map((user,idx) => (
-              <div key={idx}>
-                  <TextField variant="filled" label={"User " + String(idx)}
+              <div className={classes.userBox} key={idx}>
+                  <TextField variant="standard" label={"User " + String(idx)}
                   onChange={(event) => (updateUser(idx, event.target.value))}
-                  value={user}/>
+                  value={user} style={{paddingBottom:"5px"}}/>
                   <DraggableList inputItems={elements}
                     callback={(listItems:string[]) => {updateOrder(idx, listItems)}}/>
                 </div>
               ))}
           </Box>
         </div>
-        <Button variant="contained">Push</Button>
+        <Button variant="contained" onClick={handlePush}>Push</Button>
+        <ModalResult open={modalOpen} callbackClose={()=>setModalOpen(false)}/>
       </div>
-      <div>
 
-      </div>
+      </SocketContext.Provider>
     </ThemeProvider>
   );
 };

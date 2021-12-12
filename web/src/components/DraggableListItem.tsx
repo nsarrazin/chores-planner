@@ -5,8 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import InboxIcon from '@mui/icons-material/Inbox';
+import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -17,23 +16,24 @@ const useStyles = makeStyles({
 export type DraggableListItemProps = {
   item: string;
   index: number;
+  color: string;
 };
 
-const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
+
+const DraggableListItem = ({ item, index, color }: DraggableListItemProps) => {
   const classes = useStyles();
   return (
-    <Draggable draggableId={item} index={index}>
+    <Draggable draggableId={String(index)} index={index}>
       {(provided, snapshot) => (
         <ListItem
           ref={provided.innerRef}
+          sx={{backgroundColor:color, height:"72px"}}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={snapshot.isDragging ? classes.draggingListItem : ''}
         >
           <ListItemAvatar>
-            <Avatar>
-              <InboxIcon />
-            </Avatar>
+              <AdjustOutlinedIcon color="primary"/>
           </ListItemAvatar>
           <ListItemText primary={item} />
         </ListItem>

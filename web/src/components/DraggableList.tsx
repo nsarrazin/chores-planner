@@ -7,8 +7,9 @@ import {
   OnDragEndResponder,
   DropResult
 } from 'react-beautiful-dnd';
-import { getItems, reorder } from '../helper';
+import { reorder } from '../helper';
 import Paper from '@mui/material/Paper';
+import chroma from "chroma-js";
 
 type DraggableListMemoProps = {
   items: string[];
@@ -23,9 +24,11 @@ export type DraggableListProps ={
 const useStyles = makeStyles({
     flexPaper: {
       flex: 1,
+      backgroundColor: "#2B293D",
     }
   });
 
+let scale = chroma.scale(['#4D404F', '#2B293D']).mode('lab'); // scale used for gradient
 
 const DraggableListMemo = React.memo(({ items, onDragEnd }: DraggableListMemoProps) => {
   return (
@@ -33,8 +36,8 @@ const DraggableListMemo = React.memo(({ items, onDragEnd }: DraggableListMemoPro
       <Droppable droppableId="droppable-list">
         {provided => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            {items.map((item, index) => (
-              <DraggableListItem item={item} index={index} key={index} />
+            {items.map((item, index, arr) => (
+              <DraggableListItem item={item} index={index} key={index} color={scale(index/arr.length).hex()}/>
             ))}
             {provided.placeholder}
           </div>
@@ -53,6 +56,7 @@ const DraggableList = ({inputItems, callback}:DraggableListProps) => {
       if (!destination) return;
   
       const newItems = reorder(items, source.index, destination.index);
+      callback(newItems);
       setItems(newItems);
     };
 
