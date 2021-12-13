@@ -9,16 +9,16 @@ import {
 } from 'react-beautiful-dnd';
 import { reorder } from '../helper';
 import Paper from '@mui/material/Paper';
-import chroma from "chroma-js";
+import type { Element } from '../types';
 
 type DraggableListMemoProps = {
-  items: string[];
+  items: Element[];
   onDragEnd: OnDragEndResponder;
 };
 
 export type DraggableListProps ={
-    inputItems: string[];
-    callback: (listItems:string[]) => void;
+    items: Element[];
+    setItems: (listItems:Element[]) => void;
 }
 
 const useStyles = makeStyles({
@@ -28,16 +28,14 @@ const useStyles = makeStyles({
     }
   });
 
-let scale = chroma.scale(['#4D404F', '#2B293D']).mode('lab'); // scale used for gradient
-
-const DraggableListMemo = React.memo(({ items, onDragEnd }: DraggableListMemoProps) => {
+const DraggableListMemo = ({ items, onDragEnd }: DraggableListMemoProps) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable-list">
         {provided => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {items.map((item, index, arr) => (
-              <DraggableListItem item={item} index={index} key={index} color={scale(index/arr.length).hex()}/>
+              <DraggableListItem item={item} index={index} key={index}/>
             ))}
             {provided.placeholder}
           </div>
@@ -45,23 +43,18 @@ const DraggableListMemo = React.memo(({ items, onDragEnd }: DraggableListMemoPro
       </Droppable>
     </DragDropContext>
   );
-});
+  }
 
-const DraggableList = ({inputItems, callback}:DraggableListProps) => {
+export const DraggableList = ({items, setItems}:DraggableListProps) => {
     const classes = useStyles();
-    const [items, setItems] = React.useState(inputItems);
   
     const onDragEnd = ({ destination, source }: DropResult) => {
       // dropped outside the list
       if (!destination) return;
   
       const newItems = reorder(items, source.index, destination.index);
-      callback(newItems);
       setItems(newItems);
     };
-
-    React.useEffect(()=>(setItems(inputItems)),[inputItems])
-    React.useEffect(()=>(callback(items)), [items])
 
     return (
     <Paper className={classes.flexPaper}>
@@ -70,4 +63,3 @@ const DraggableList = ({inputItems, callback}:DraggableListProps) => {
     );
   };
 
-export default DraggableList;

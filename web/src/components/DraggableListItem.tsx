@@ -7,6 +7,8 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 
+import type { Element } from '../types';
+
 const useStyles = makeStyles({
   draggingListItem: {
     background: "#2B2A3C"
@@ -14,20 +16,19 @@ const useStyles = makeStyles({
 });
 
 export type DraggableListItemProps = {
-  item: string;
+  item:Element;
   index: number;
-  color: string;
 };
 
 
-const DraggableListItem = ({ item, index, color }: DraggableListItemProps) => {
+const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
   const classes = useStyles();
   return (
     <Draggable draggableId={String(index)} index={index}>
       {(provided, snapshot) => (
         <ListItem
           ref={provided.innerRef}
-          sx={{backgroundColor:color, height:"72px"}}
+          sx={{backgroundColor:item.color, height:"72px"}}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={snapshot.isDragging ? classes.draggingListItem : ''}
@@ -35,7 +36,7 @@ const DraggableListItem = ({ item, index, color }: DraggableListItemProps) => {
           <ListItemAvatar>
               <AdjustOutlinedIcon color="primary"/>
           </ListItemAvatar>
-          <ListItemText primary={item} />
+          <ListItemText primary={item.index} />
         </ListItem>
       )}
     </Draggable>
