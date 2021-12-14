@@ -1,6 +1,5 @@
 import * as React from 'react';
 import DraggableListItem from './DraggableListItem';
-import makeStyles from '@mui/styles/makeStyles';
 import {
   DragDropContext,
   Droppable,
@@ -8,7 +7,6 @@ import {
   DropResult
 } from 'react-beautiful-dnd';
 import { reorder } from '../helper';
-import Paper from '@mui/material/Paper';
 import type { Element } from '../types';
 
 type DraggableListMemoProps = {
@@ -21,20 +19,13 @@ export type DraggableListProps ={
     setItems: (listItems:Element[]) => void;
 }
 
-const useStyles = makeStyles({
-    flexPaper: {
-      flex: 1,
-      backgroundColor: "#2B293D",
-    }
-  });
-
 const DraggableListMemo = ({ items, onDragEnd }: DraggableListMemoProps) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable-list">
         {provided => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            {items.map((item, index, arr) => (
+            {items.map((item, index) => (
               <DraggableListItem item={item} index={index} key={index}/>
             ))}
             {provided.placeholder}
@@ -46,8 +37,6 @@ const DraggableListMemo = ({ items, onDragEnd }: DraggableListMemoProps) => {
   }
 
 export const DraggableList = ({items, setItems}:DraggableListProps) => {
-    const classes = useStyles();
-  
     const onDragEnd = ({ destination, source }: DropResult) => {
       // dropped outside the list
       if (!destination) return;
@@ -57,9 +46,7 @@ export const DraggableList = ({items, setItems}:DraggableListProps) => {
     };
 
     return (
-    <Paper className={classes.flexPaper}>
-        <DraggableListMemo items={items} onDragEnd={onDragEnd} />
-    </Paper>
+      <DraggableListMemo items={items} onDragEnd={onDragEnd} />
     );
   };
 

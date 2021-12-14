@@ -12,10 +12,12 @@ export type PreferenceWidgetProps = {
 
 export const PreferenceWidget = (props:PreferenceWidgetProps) => {
     return <Box display="flex" flexDirection="column" padding="2rem">
-                <TextField variant="standard" label={""}
+                <TextField variant="filled" label="Name"
                 onChange={(event) => {props.setUser(event.target.value)}}
-                value={props.user} style={{paddingBottom:"5px"}}/>
-                <DraggableList items={props.preferences} setItems={props.setPreferences}/>
+                value={props.user} 
+                style={{paddingBottom:"5px"}} inputProps={{style: {fontSize: "1.25rem"}}}/>
+
+                {props.preferences !== undefined && <DraggableList items={props.preferences} setItems={props.setPreferences}/>}
 
     </Box>
 }

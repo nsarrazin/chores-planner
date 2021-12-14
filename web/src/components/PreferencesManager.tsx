@@ -28,7 +28,7 @@ export const PreferencesManager = (props:PreferencesManagerProps) => {
             {props.users.map((user,idx)=>(
                 <PreferenceWidget user={user}
                                   setUser={(newUser:string)=>(setUser(idx, newUser))}
-                                  preferences={props.order[idx]} 
+                                  preferences={props.order[idx]}
                                   setPreferences={(newPreferences:Element[])=>(setPreferences(idx, newPreferences))}
                                   key={idx}/>
             ))}

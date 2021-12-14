@@ -6,6 +6,12 @@ export type Element = {
     index: number;
 }
 
+export type Preferences = {
+    user: string;
+    index: number;
+    ordering: Element[];
+}
+
 export interface Data{
     users: string[],
     elements: Element [],

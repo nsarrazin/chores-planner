@@ -3,16 +3,25 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import makeStyles from '@mui/styles/makeStyles';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
 import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 
+import { Paper, Typography } from '@mui/material';
 import type { Element } from '../types';
 
 const useStyles = makeStyles({
-  draggingListItem: {
-    background: "#2B2A3C"
-  }
+  paper: {
+    borderRadius: "1rem",
+    marginTop: "0.5rem",
+    marginBottom: "0.5rem",
+    width:"100%",
+    height:"3rem",
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"space-evenly",
+    alignItems:"center"
+    
+  },
+  
 });
 
 export type DraggableListItemProps = {
@@ -25,18 +34,17 @@ const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
   const classes = useStyles();
   return (
     <Draggable draggableId={String(index)} index={index}>
-      {(provided, snapshot) => (
-        <ListItem
-          ref={provided.innerRef}
-          sx={{backgroundColor:item.color, height:"72px"}}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={snapshot.isDragging ? classes.draggingListItem : ''}
-        >
-          <ListItemAvatar>
+    {(provided, snapshot) => (
+      <ListItem
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            sx={{padding:0}}
+          >
+          <Paper className={classes.paper} sx={{backgroundColor:item.color}}  elevation={5}>
               <AdjustOutlinedIcon color="primary"/>
-          </ListItemAvatar>
-          <ListItemText primary={item.index} />
+              <Typography>{item.name} </Typography>
+          </Paper>
         </ListItem>
       )}
     </Draggable>

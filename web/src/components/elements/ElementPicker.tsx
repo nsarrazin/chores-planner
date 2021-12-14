@@ -1,14 +1,15 @@
 import * as React from 'react';
 import type { Element } from '../../types';
-import { Typography, Box, TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { PopoverPicker } from '../widgets/PopoverPicker';
 
 export type ElementPickerProps ={
+    index: number;
     element: Element;
     setElement: (element:Element) => void;
 }
 
-export const ElementPicker = ({element, setElement}: ElementPickerProps) => {
+export const ElementPicker = ({index, element, setElement}: ElementPickerProps) => {
     function setColor(color:string){
         setElement({...element, color:color});
     }
@@ -19,7 +20,7 @@ export const ElementPicker = ({element, setElement}: ElementPickerProps) => {
 
     return (
         <Box display="flex" justifyContent="space-evenly">
-            <TextField label={""}
+            <TextField 
                     value={element.name} variant="outlined"
                     onChange={(event) => (setName(event.target.value))}/>
             <PopoverPicker color={element.color} onChange={setColor} />
