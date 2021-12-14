@@ -3,8 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import makeStyles from '@mui/styles/makeStyles';
 import ListItem from '@mui/material/ListItem';
-import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
-
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Paper, Typography, Box } from '@mui/material';
 import type { Element } from '../../../types';
 
@@ -43,7 +42,7 @@ const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
           >
           <Paper className={classes.paper} sx={{backgroundColor:item.color}}  elevation={5}>
             <Box paddingRight={"2rem"} paddingLeft={"1rem"}>
-              <AdjustOutlinedIcon color="primary"/>
+              <DragIndicatorIcon color="primary"/>
             </Box>
               <Typography>{item.name} </Typography>
           </Paper>

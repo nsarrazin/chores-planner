@@ -7,7 +7,7 @@ import { socket } from '../context/socket';
 import { Typography } from '@mui/material';
 
 import { ElementsManager } from './elements/ElementsManager';
-import { Element, Data, Preferences } from '../types';
+import { Element, Data, Preferences, User } from '../types';
 import { PreferencesManager } from './preferences/PreferencesManager';
 import { ModalResult } from './Modal';
 
@@ -29,13 +29,13 @@ const useStyles = makeStyles({
 })
 
 let defaultElement:Element = {name:"task", color:"#836E87", index:0}
-let defaultUser:string = "user"
-let defaultPreferences:Preferences = {user:"user", index:0, order:[defaultElement]}
+let defaultUser:User = {name:"user", index:0}
+let defaultPreferences:Preferences = {user:defaultUser, order:[defaultElement]}
     
 export const MainPage = () => {
     const classes = useStyles();
 
-    const [users, setUsers] = React.useState<string[]>([defaultUser])
+    const [users, setUsers] = React.useState<User[]>([defaultUser])
     const [elements, setElements] = React.useState<Element[]>([defaultElement])
     
     const [order, setOrder] = React.useState<Preferences[]>([defaultPreferences]);
@@ -59,7 +59,6 @@ export const MainPage = () => {
             for (let i = newOrder.length; i < users.length; i++) {
                 let prefs:Preferences = {
                     user: users[i],
-                    index: i,
                     order: elements
                 }
                 newOrder.push(prefs);
@@ -108,15 +107,19 @@ export const MainPage = () => {
         for (let i = 0; i < elements.length; i++) {
             elements[i].index = i        
         }
+        for (let j = 0; j < users.length; j++) {
+            users[j].index = j
+            
+        }
     }
+
     function handlePush(){
-        
-        let data:Data={users:users, elements:elements, order:order};
+        let data:Data={users:users, elements:elements, preferences:order};
         socket.emit("request", data);
         setModalOpen(true);
     }
     
-    React.useEffect(updateIndexes, [elements]);
+    React.useEffect(updateIndexes, [users, elements]);
     React.useEffect(updateOrder, [users, elements]);
     React.useEffect(updateElements, [elements]);
     

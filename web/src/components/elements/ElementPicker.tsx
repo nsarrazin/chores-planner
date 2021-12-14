@@ -20,7 +20,7 @@ export const ElementPicker = ({index, element, setElement}: ElementPickerProps) 
 
     return (
         <Box display="flex" justifyContent="space-evenly">
-            <TextField 
+            <TextField label="Task name"
                     value={element.name} variant="outlined"
                     onChange={(event) => (setName(event.target.value))}/>
             <PopoverPicker color={element.color} onChange={setColor} />

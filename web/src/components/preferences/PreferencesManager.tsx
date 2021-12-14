@@ -1,21 +1,21 @@
 import * as React from 'react';
-import type { Element, Preferences } from '../../types';
+import type { Element, Preferences, User } from '../../types';
 
 import { PreferenceWidget } from './PreferenceWidget';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 
 export type PreferencesManagerProps = {
-    users: string[];
-    setUsers: (newUsers:string[]) => void;
+    users: User[];
+    setUsers: (newUsers:User[]) => void;
     elements: Element[];
     order: Preferences[];
     setOrder: (newOrder:Preferences[]) => void;
 }
 
 export const PreferencesManager = (props:PreferencesManagerProps) => {
-    function setUser(idx:number, user:string){
+    function setUser(idx:number, user:User){
         let arr = props.users.slice();
-        arr[idx] = user
+        arr[idx] = user;
         props.setUsers(arr)
     }
 
@@ -26,14 +26,14 @@ export const PreferencesManager = (props:PreferencesManagerProps) => {
     }
     
     return (
-        <Box display="flex">
-            {props.users.map((user,idx)=>(
-                <PreferenceWidget user={user}
-                                  setUser={(newUser:string)=>(setUser(idx, newUser))}
-                                  preferences={props.order[idx]}
-                                  setPreferences={(newPreferences:Preferences)=>(setPreferences(idx, newPreferences))}
-                                  key={idx}/>
-            ))}
-        </Box>
+    <Box display="flex">
+        {props.users.map((user,idx)=>(
+            <PreferenceWidget user={user}
+                                setUser={(newUser:User)=>(setUser(idx, newUser))}
+                                preferences={props.order[idx]}
+                                setPreferences={(newPreferences:Preferences)=>(setPreferences(idx, newPreferences))}
+                                key={idx}/>
+        ))}
+    </Box>
     )
 }

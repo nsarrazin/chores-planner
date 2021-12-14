@@ -16,7 +16,7 @@ export const ButtonInput = ({name, state, setState, defaultItem}:ButtonInputProp
   function handleIncrement() {
     let newState = [...state]
     let idx = state.length;
-    let toAdd:string = " " + idx.toString();
+    let toAdd:string = " " + (idx+1).toString();
 
     if (typeof defaultItem === "string"){
       newState.push(defaultItem + toAdd);
