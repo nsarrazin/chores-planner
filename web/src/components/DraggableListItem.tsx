@@ -33,7 +33,7 @@ export type DraggableListItemProps = {
 const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
   const classes = useStyles();
   return (
-    <Draggable draggableId={String(index)} index={index}>
+    <Draggable draggableId={index.toString()} index={index}>
     {(provided, snapshot) => (
       <ListItem
             ref={provided.innerRef}

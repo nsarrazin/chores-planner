@@ -11,10 +11,17 @@ export type ButtonInputProps = {
 export const ButtonInput = ({name, state, setState, defaultItem}:ButtonInputProps) => {
     
   function handleIncrement() {
+    let newState = [...state]
+    let toAdd:string = " " + state.length.toString();
+
     if (typeof defaultItem === "string"){
-      setState([...state, defaultItem]);
+      newState.push(defaultItem + toAdd);
     }
-    setState([...state, {...defaultItem}]);
+    else{
+      newState.push({...defaultItem, name:defaultItem.name + toAdd});
+    }
+
+    setState(newState);
   };
   
   function handleDecrement(){
