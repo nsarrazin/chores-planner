@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 
 import { Paper, Typography, Box } from '@mui/material';
-import type { Element } from '../types';
+import type { Element } from '../../../types';
 
 const useStyles = makeStyles({
   paper: {

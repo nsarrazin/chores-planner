@@ -1,7 +1,7 @@
 import * as React from 'react';
-import type { Element, Preferences } from '../types';
+import type { Preferences } from '../../types';
 import { TextField,Box } from '@mui/material';
-import { DraggableList } from './DraggableList';
+import { DraggableList } from '../widgets/draggableList/DraggableList';
 
 export type PreferenceWidgetProps = {
     user: string;

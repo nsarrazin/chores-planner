@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Element, Preferences } from '../types';
+import type { Element, Preferences } from '../../types';
 
 import { PreferenceWidget } from './PreferenceWidget';
 import { Box } from '@mui/system';

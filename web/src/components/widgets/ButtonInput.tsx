@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, ButtonGroup, Typography} from '@mui/material';
-
+import chroma from 'chroma-js';
 export type ButtonInputProps = {
     name: string;
     state: any[];
@@ -8,17 +8,21 @@ export type ButtonInputProps = {
     defaultItem: any;
 }
 
+let scale = chroma.scale(['#836E87','#A2783F'])
+                        .mode('lch').colors(6)
+
 export const ButtonInput = ({name, state, setState, defaultItem}:ButtonInputProps) => {
     
   function handleIncrement() {
     let newState = [...state]
-    let toAdd:string = " " + state.length.toString();
+    let idx = state.length;
+    let toAdd:string = " " + idx.toString();
 
     if (typeof defaultItem === "string"){
       newState.push(defaultItem + toAdd);
     }
     else{
-      newState.push({...defaultItem, name:defaultItem.name + toAdd});
+      newState.push({...defaultItem, name:defaultItem.name + toAdd, color:scale[idx % scale.length]});
     }
 
     setState(newState);

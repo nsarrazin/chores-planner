@@ -8,7 +8,7 @@ import { Typography } from '@mui/material';
 
 import { ElementsManager } from './elements/ElementsManager';
 import { Element, Data, Preferences } from '../types';
-import { PreferencesManager } from './PreferencesManager';
+import { PreferencesManager } from './preferences/PreferencesManager';
 import { ModalResult } from './Modal';
 
 const useStyles = makeStyles({
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     }
 })
 
-let defaultElement:Element = {name:"task", color:"#121118", index:0}
+let defaultElement:Element = {name:"task", color:"#836E87", index:0}
 let defaultUser:string = "user"
 let defaultPreferences:Preferences = {user:"user", index:0, order:[defaultElement]}
     

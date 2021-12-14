@@ -6,8 +6,8 @@ import {
   OnDragEndResponder,
   DropResult
 } from 'react-beautiful-dnd';
-import { reorder } from '../helper';
-import type { Preferences, Element } from '../types';
+import { reorder } from '../../../helper';
+import type { Preferences, Element } from '../../../types';
 
 type DraggableListMemoProps = {
   items: Element[];
