@@ -7,7 +7,7 @@ import { socket } from '../context/socket';
 import { Typography } from '@mui/material';
 
 import { ElementsManager } from './elements/ElementsManager';
-import { Element, Data } from '../types';
+import { Element, Data, Preferences } from '../types';
 import { PreferencesManager } from './PreferencesManager';
 import { ModalResult } from './Modal';
 
@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 
 let defaultElement:Element = {name:"task", color:"#121118", index:0}
 let defaultUser:string = "user"
+let defaultPreferences:Preferences = {user:"user", index:0, order:[defaultElement]}
     
 export const MainPage = () => {
     const classes = useStyles();
@@ -37,11 +38,10 @@ export const MainPage = () => {
     const [users, setUsers] = React.useState<string[]>([defaultUser])
     const [elements, setElements] = React.useState<Element[]>([defaultElement])
     
-    const [order, setOrder] = React.useState<Element[][]>([[defaultElement]]);
+    const [order, setOrder] = React.useState<Preferences[]>([defaultPreferences]);
     
     const [modalOpen, setModalOpen] = React.useState(false);
     
-    let PreferencesManagerProps = { users:users, setUsers:setUsers, elements:elements, order:order, setOrder:setOrder}
     
     function updateOrder(){
         let newOrder = [...order];
@@ -49,54 +49,61 @@ export const MainPage = () => {
         let deltaRows = users.length - newOrder.length;
         let deltaCols = 0;
         if (newOrder.length>0){
-            deltaCols = elements.length - newOrder[0].length; 
+            deltaCols = elements.length - newOrder[0].order.length; 
         }
         
         if (deltaRows < 0){ // if rows need to be removed, slice them
             newOrder = newOrder.slice(0, deltaRows)
         }
         else if (deltaRows > 0) { // otherwise fill them with the default order
-            for (let i = 0; i < deltaRows; i++) {
-                newOrder.push(elements);
+            for (let i = newOrder.length; i < users.length; i++) {
+                let prefs:Preferences = {
+                    user: users[i],
+                    index: i,
+                    order: elements
+                }
+                newOrder.push(prefs);
             }
         }
-
+        
         if (deltaCols < 0){ // if cols need to be removed, drop last elements
             for (let i = 0; i < newOrder.length; i++) {
-                console.log(i, newOrder[i])
-                let indexes = newOrder[i].map((el)=>(el.index)) // map index of element
+                let arr = [...newOrder[i].order]
+
+                let indexes = arr.map((el)=>(el.index)) // map index of element
                 let idxToRemove = indexes.indexOf(Math.max(...indexes)) // pick the last one
-                newOrder[i].splice(idxToRemove, 1) // drop it
-                console.log(i, newOrder[i])
+                arr.splice(idxToRemove, 1) // drop it
+
+                newOrder[i].order = arr
             }
             // }
         }
         if (deltaCols > 0){ // if cols need to be added, add elements corresponding
             for (let i = 0; i < newOrder.length; i++) {
-                for (let j = newOrder[i].length; j < elements.length; j++) {
-                    newOrder[i].push(elements[j])
+                for (let j = newOrder[i].order.length; j < elements.length; j++) {
+                    newOrder[i].order.push(elements[j])
                 }                
             }
         }
         setOrder(newOrder)
     }
-
+    
     function updateElements(){
         let newOrder = [...order];
-
+        
         let elementsDict: {[name:number] : Element} = {};
         for (let i = 0; i < elements.length; i++) {
             elementsDict[elements[i].index] = elements[i]
         }
         // check for updated elements
         for (let i = 0; i < newOrder.length; i++) {
-            for (let j = 0; j < newOrder[i].length; j++) {
-                newOrder[i][j] = elementsDict[newOrder[i][j].index]
+            for (let j = 0; j < newOrder[i].order.length; j++) {
+                newOrder[i].order[j] = elementsDict[newOrder[i].order[j].index]
             }            
         }
         setOrder(newOrder)
     }
-
+    
     function updateIndexes(){
         for (let i = 0; i < elements.length; i++) {
             elements[i].index = i        
@@ -108,12 +115,12 @@ export const MainPage = () => {
         socket.emit("request", data);
         setModalOpen(true);
     }
-
+    
     React.useEffect(updateIndexes, [elements]);
     React.useEffect(updateOrder, [users, elements]);
     React.useEffect(updateElements, [elements]);
-
-    console.log(order)
+    
+    let PreferencesManagerProps = { users:users, setUsers:setUsers, elements:elements, order:order, setOrder:setOrder}
     return (
         <div>
             <Typography variant="h2" className={classes.title}>

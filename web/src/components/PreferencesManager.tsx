@@ -1,13 +1,15 @@
 import * as React from 'react';
-import type { Element } from '../types';
+import type { Element, Preferences } from '../types';
+
 import { PreferenceWidget } from './PreferenceWidget';
 import { Box } from '@mui/system';
+
 export type PreferencesManagerProps = {
     users: string[];
     setUsers: (newUsers:string[]) => void;
     elements: Element[];
-    order: Element[][];
-    setOrder: (newOrder:Element[][]) => void;
+    order: Preferences[];
+    setOrder: (newOrder:Preferences[]) => void;
 }
 
 export const PreferencesManager = (props:PreferencesManagerProps) => {
@@ -17,7 +19,7 @@ export const PreferencesManager = (props:PreferencesManagerProps) => {
         props.setUsers(arr)
     }
 
-    function setPreferences(idx:number, preferences:Element[]){
+    function setPreferences(idx:number, preferences:Preferences){
         let arr = props.order.slice();
         arr[idx] = preferences
         props.setOrder(arr)
@@ -29,7 +31,7 @@ export const PreferencesManager = (props:PreferencesManagerProps) => {
                 <PreferenceWidget user={user}
                                   setUser={(newUser:string)=>(setUser(idx, newUser))}
                                   preferences={props.order[idx]}
-                                  setPreferences={(newPreferences:Element[])=>(setPreferences(idx, newPreferences))}
+                                  setPreferences={(newPreferences:Preferences)=>(setPreferences(idx, newPreferences))}
                                   key={idx}/>
             ))}
         </Box>

@@ -9,13 +9,13 @@ export type Element = {
 export type Preferences = {
     user: string;
     index: number;
-    ordering: Element[];
+    order: Element[];
 }
 
 export interface Data{
     users: string[],
     elements: Element [],
-    order?: Element[][]
+    order?: Preferences[]
     params?: Params
   }
 

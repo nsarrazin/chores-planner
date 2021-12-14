@@ -5,7 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import ListItem from '@mui/material/ListItem';
 import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
 import type { Element } from '../types';
 
 const useStyles = makeStyles({
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     height:"3rem",
     display:"flex",
     flexDirection:"row",
-    justifyContent:"space-evenly",
+    justifyContent:"flex-start",
     alignItems:"center"
     
   },
@@ -42,7 +42,9 @@ const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
             sx={{padding:0}}
           >
           <Paper className={classes.paper} sx={{backgroundColor:item.color}}  elevation={5}>
+            <Box paddingRight={"2rem"} paddingLeft={"1rem"}>
               <AdjustOutlinedIcon color="primary"/>
+            </Box>
               <Typography>{item.name} </Typography>
           </Paper>
         </ListItem>
