@@ -7,7 +7,7 @@ import {
   DropResult
 } from 'react-beautiful-dnd';
 import { reorder } from '../../../helper';
-import type { Preferences, Element } from '../../../types';
+import type { Element } from '../../../types';
 
 type DraggableListMemoProps = {
   items: Element[];
@@ -15,8 +15,8 @@ type DraggableListMemoProps = {
 };
 
 export type DraggableListProps ={
-    prefs: Preferences;
-    setPrefs: (listItems:Preferences) => void;
+    prefs: Element[];
+    setPrefs: (listItems:Element[]) => void;
 }
 
 const DraggableListMemo = ({ items, onDragEnd }: DraggableListMemoProps) => {
@@ -37,22 +37,17 @@ const DraggableListMemo = ({ items, onDragEnd }: DraggableListMemoProps) => {
   }
 
 export const DraggableList = ({prefs, setPrefs}:DraggableListProps) => {
-  let items = prefs.order;
-
-
     const onDragEnd = ({ destination, source }: DropResult) => {
       // dropped outside the list
       if (!destination) return;
   
-      const newItems = reorder(items, source.index, destination.index);
+      const newItems = reorder(prefs, source.index, destination.index);
 
-      let newPrefs = {...prefs, order:newItems};
-
-      setPrefs(newPrefs);
+      setPrefs(newItems);
     };
 
     return (
-      <DraggableListMemo items={items} onDragEnd={onDragEnd} />
+      <DraggableListMemo items={prefs} onDragEnd={onDragEnd} />
     );
   };
 

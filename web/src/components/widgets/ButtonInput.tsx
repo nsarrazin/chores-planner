@@ -1,41 +1,19 @@
 import * as React from 'react';
 import { Button, ButtonGroup, Typography} from '@mui/material';
-import chroma from 'chroma-js';
+
 export type ButtonInputProps = {
     name: string;
     state: any[];
-    setState: (value:any[]) => void;
-    defaultItem: any;
+    increment: () => void;
+    decrement: () => void;
 }
 
-let scale = chroma.scale(['#836E87','#A2783F'])
-                        .mode('lch').colors(6)
-
-export const ButtonInput = ({name, state, setState, defaultItem}:ButtonInputProps) => {
-    
-  function handleIncrement() {
-    let newState = [...state]
-    let idx = state.length;
-    let toAdd:string = " " + (idx+1).toString();
-
-    if (typeof defaultItem === "string"){
-      newState.push(defaultItem + toAdd);
-    }
-    else{
-      newState.push({...defaultItem, name:defaultItem.name + toAdd, color:scale[idx % scale.length]});
-    }
-
-    setState(newState);
-  };
-  
-  function handleDecrement(){
-    setState(state.slice(0, -1));
-  };
+export const ButtonInput = ({name, state, increment, decrement}:ButtonInputProps) => {
 
   const buttons = [
-    <Button key="minusUsers" onClick={handleDecrement}>-</Button>,
+    <Button key="minusUsers" onClick={decrement}>-</Button>,
     <Button disabled key="users">{state.length}</Button>,
-    <Button key="plusUsers" onClick={handleIncrement}>+</Button>,
+    <Button key="plusUsers" onClick={increment}>+</Button>,
   ]
   
   return (

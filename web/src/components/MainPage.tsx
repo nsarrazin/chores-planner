@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ButtonInput } from './widgets/ButtonInput';
+import { Buttons } from './widgets/Buttons';
 import { Button, Box } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { socket } from '../context/socket';
@@ -7,7 +7,7 @@ import { socket } from '../context/socket';
 import { Typography } from '@mui/material';
 
 import { ElementsManager } from './elements/ElementsManager';
-import { Element, Data, Preferences, User } from '../types';
+import { Element, Data, User } from '../types';
 import { PreferencesManager } from './preferences/PreferencesManager';
 import { ModalResult } from './Modal';
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
       marginRight:"15vw",
       marginLeft:"15vw",
       marginBottom:"5vh",
-      marignTop:"5vh"
+      marginTop:"5vh"
     },
     title:{
         textAlign: "center",
@@ -29,78 +29,62 @@ const useStyles = makeStyles({
 })
 
 let defaultElement:Element = {name:"task", color:"#836E87", index:0}
-let defaultUser:User = {name:"user", index:0}
-let defaultPreferences:Preferences = {user:defaultUser, order:[defaultElement]}
+let defaultUser:User = {name:"user", index:0, preferences: [defaultElement]}
     
 export const MainPage = () => {
     const classes = useStyles();
 
-    const [users, setUsers] = React.useState<User[]>([defaultUser])
-    const [elements, setElements] = React.useState<Element[]>([defaultElement])
-    
-    const [order, setOrder] = React.useState<Preferences[]>([defaultPreferences]);
-    
+    const [users, setUsers] = React.useState<User[]>([{name:"user", index:0, preferences: [{name:"task", color:"#836E87", index:0}]}])
+    const [elements, setElements] = React.useState<Element[]>([{name:"task 1", color:"#836E87", index:0}])
     const [modalOpen, setModalOpen] = React.useState(false);
     
     
-    function updateOrder(){
-        let newOrder = [...order];
-        
-        let deltaRows = users.length - newOrder.length;
-        let deltaCols = 0;
-        if (newOrder.length>0){
-            deltaCols = elements.length - newOrder[0].order.length; 
-        }
-        
-        if (deltaRows < 0){ // if rows need to be removed, slice them
-            newOrder = newOrder.slice(0, deltaRows)
-        }
-        else if (deltaRows > 0) { // otherwise fill them with the default order
-            for (let i = newOrder.length; i < users.length; i++) {
-                let prefs:Preferences = {
-                    user: users[i],
-                    order: elements
+    function updatePrefs(){
+        if (users.length>0){
+            let newUsers = [...users];
+
+            for (let i = 0; i < newUsers.length; i++) {
+                let deltaCols = elements.length - newUsers[i].preferences.length; 
+                
+                if (deltaCols < 0){ // if cols need to be removed, drop last elements
+                    for (let n = 0; n < -deltaCols; n++) {
+                            let arr = [...newUsers[i].preferences]
+            
+                            let indexes = arr.map((el)=>(el.index)) // map index of element
+                            let idxToRemove = indexes.indexOf(Math.max(...indexes)) // pick the last one
+                            arr.splice(idxToRemove, 1) // drop it
+            
+                            newUsers[i].preferences = arr
+                        }
+                    }
+
+                if (deltaCols > 0){ // if cols need to be added, add elements corresponding
+                    for (let n = 0; n < deltaCols; n++) {
+                            for (let j = newUsers[i].preferences.length; j < elements.length; j++) {
+                                newUsers[i].preferences.push(elements[j])
+                            }                
+                        }
+                    }
                 }
-                newOrder.push(prefs);
+                setUsers(newUsers)
             }
         }
         
-        if (deltaCols < 0){ // if cols need to be removed, drop last elements
-            for (let i = 0; i < newOrder.length; i++) {
-                let arr = [...newOrder[i].order]
-
-                let indexes = arr.map((el)=>(el.index)) // map index of element
-                let idxToRemove = indexes.indexOf(Math.max(...indexes)) // pick the last one
-                arr.splice(idxToRemove, 1) // drop it
-
-                newOrder[i].order = arr
-            }
-            // }
-        }
-        if (deltaCols > 0){ // if cols need to be added, add elements corresponding
-            for (let i = 0; i < newOrder.length; i++) {
-                for (let j = newOrder[i].order.length; j < elements.length; j++) {
-                    newOrder[i].order.push(elements[j])
-                }                
-            }
-        }
-        setOrder(newOrder)
-    }
     
     function updateElements(){
-        let newOrder = [...order];
+        let newUsers = [...users];
         
         let elementsDict: {[name:number] : Element} = {};
         for (let i = 0; i < elements.length; i++) {
             elementsDict[elements[i].index] = elements[i]
         }
         // check for updated elements
-        for (let i = 0; i < newOrder.length; i++) {
-            for (let j = 0; j < newOrder[i].order.length; j++) {
-                newOrder[i].order[j] = elementsDict[newOrder[i].order[j].index]
+        for (let i = 0; i < newUsers.length; i++) {
+            for (let j = 0; j < newUsers[i].preferences.length; j++) {
+                newUsers[i].preferences[j] = elementsDict[newUsers[i].preferences[j].index]
             }            
         }
-        setOrder(newOrder)
+        setUsers(newUsers)
     }
     
     function updateIndexes(){
@@ -114,25 +98,22 @@ export const MainPage = () => {
     }
 
     function handlePush(){
-        let data:Data={users:users, elements:elements, preferences:order};
+        let data:Data={users:users, elements:elements};
         socket.emit("request", data);
         setModalOpen(true);
     }
     
     React.useEffect(updateIndexes, [users, elements]);
-    React.useEffect(updateOrder, [users, elements]);
+    React.useEffect(updatePrefs, [elements]);
     React.useEffect(updateElements, [elements]);
     
-    let PreferencesManagerProps = { users:users, setUsers:setUsers, elements:elements, order:order, setOrder:setOrder}
+    let PreferencesManagerProps = { users:users, setUsers:setUsers, elements:elements}
     return (
         <div>
             <Typography variant="h2" className={classes.title}>
                 Chores Planner
             </Typography>
-            <Box className={classes.input}>
-                <ButtonInput name="Users" state={users} setState={setUsers} defaultItem={defaultUser}/>
-                <ButtonInput name="Elements" state={elements} setState={setElements} defaultItem={defaultElement}/>
-            </Box>
+            <Buttons users={users} setUsers={setUsers} elements={elements} setElements={setElements}/>
             <Box display="flex" justifyContent="space-around">
                 <ElementsManager elements={elements} setElements={setElements}/>
                 <PreferencesManager {...PreferencesManagerProps} />
