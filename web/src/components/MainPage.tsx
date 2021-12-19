@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Buttons } from './widgets/Buttons';
 import { Button, Box } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { SpongeIcon } from './SpongeIcon';
+import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
 
 import { Typography } from '@mui/material';
 
@@ -44,7 +44,7 @@ export const MainPage = () => {
 
     const [users, setUsers] = React.useState<User[]>(defaultUsers)
     const [elements, setElements] = React.useState<Element[]>(defaultElements)
-    
+
     const [params, setParams] = React.useState<Params>({fairness:2, length:3, depth:20})
     const [modalOpen, setModalOpen] = React.useState(false);
     const [sols, setSols] = React.useState<Solution[]>();
@@ -103,7 +103,7 @@ export const MainPage = () => {
     }
 
     function handlePush(){
-        let data:Data={users:users, elements:elements, params:params};
+        let data:Data={users:users, elements:elements};
         setSols(solve(data));
         setModalOpen(true);
     }
@@ -114,8 +114,10 @@ export const MainPage = () => {
     let PreferencesManagerProps = { users:users, setUsers:setUsers, elements:elements}
     return (
         <div>
-            <Box >
-                <SpongeIcon/>
+            <Box display="flex" flexDirection="row" justifyContent="center">
+                <Typography variant="h2" className={classes.title}>
+                    <LocalLaundryServiceIcon/>
+                </Typography>
                 <Typography variant="h2" className={classes.title}>
                     Chores Planner
                 </Typography>
@@ -126,14 +128,11 @@ export const MainPage = () => {
                 <Box flexGrow={3}>
                     <PreferencesManager {...PreferencesManagerProps} />
                     <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" paddingRight="10vw">
-                        <Parameters params={params} setParams={setParams}/>
-                        <Box>
-                        <Button variant="contained" onClick={handlePush}>Push</Button>
-                        </Box>
+                    <Button variant="contained" onClick={handlePush}>Push</Button>
                     </Box>
                 </Box>
             </Box>
-            {sols !== undefined && <ModalResult open={modalOpen} callbackClose={()=>setModalOpen(false)} sols={sols} users={users}/>}
+            {sols !== undefined && <ModalResult open={modalOpen} callbackClose={()=>setModalOpen(false)} initSols={sols} users={users}/>}
         </div>
     )
 }

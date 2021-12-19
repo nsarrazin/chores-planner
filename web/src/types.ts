@@ -16,7 +16,6 @@ export type Element = {
 export type Data = {
     users: User[],
     elements: Element[],
-    params: Params
   }
 
 // params for the solver

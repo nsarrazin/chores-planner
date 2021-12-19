@@ -11,8 +11,8 @@ const useStyles = makeStyles({
       justifyContent:"space-around",
       marginRight:"15vw",
       marginLeft:"15vw",
-      marginBottom:"5vh",
-      marginTop:"5vh"
+      marginBottom:"1vh",
+      marginTop:"1vh"
     }})
 
 let scale = chroma.scale(['#836E87','#A2783F'])

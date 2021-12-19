@@ -18,7 +18,7 @@ export const PreferenceWidget = (props:PreferenceWidgetProps) => {
         let newUser:User = {...props.user, preferences: val}
         props.setUser(newUser)
     }
-    return <Box display="flex" flexDirection="column" padding="2rem">
+    return <Box display="flex" flexDirection="column" padding="1.5rem" paddingTop="1rem">
                 <TextField variant="filled" label="Name"
                 onChange={(event) => {setString(event.target.value)}}
                 value={props.user.name} 

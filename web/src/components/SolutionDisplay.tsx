@@ -35,7 +35,9 @@ const useStyles = makeStyles({
 export const SolutionDisplay = ({solution, users}:SolutionDisplayProps) => {
     const classes = useStyles();
     if (solution === undefined){
-        return <div></div>
+        return <Box flexGrow="1" display="flex" alignItems="center" justifyContent="center">
+            <Typography variant="button">No solution matches both criterias</Typography>
+        </Box>
     }
 
     let maxScore = Math.max(...solution.score.scores)
@@ -47,10 +49,10 @@ export const SolutionDisplay = ({solution, users}:SolutionDisplayProps) => {
                 {users.map((el, idx)=>(
                     <Box key={idx} display="flex" flexDirection="row">
                         <Typography variant="h5" width="100%" align="center">{el.name}</Typography>
-                        <Chip label={solution.score.scores[idx].toString()} color={ solution.score.scores[idx] === maxScore ? "success" :
-                                                                                    solution.score.scores[idx] === minScore ? "error" :
-                                                                                    "primary" }
-                        />
+                        <Chip label={solution.score.scores[idx].toString() + " points"} sx={{marginLeft:"1rem"}}
+                            color={ solution.score.scores[idx] === maxScore ? "success" :
+                                    solution.score.scores[idx] === minScore ? "error" :
+                                    "primary" } />
                     </Box>
                 ))}
             </Box>
@@ -68,7 +70,9 @@ export const SolutionDisplay = ({solution, users}:SolutionDisplayProps) => {
                 </Box>
             ))}
             <Box>
-
+            </Box>
+            <Box>
+                <Typography align="center" variant="subtitle1" marginTop="2rem">Total score is {solution.score.sum}, unfairness is {solution.score.fairness}</Typography>
             </Box>
         </Box>
     )

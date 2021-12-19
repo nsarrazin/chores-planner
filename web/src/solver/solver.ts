@@ -2,12 +2,10 @@ import { Element, Data, User, Params, Row, Solution, Score} from '../types';
 import * as Combinatorics from 'js-combinatorics';
 
 class Solver{
-    readonly params: Params;
     readonly users: User[];
     readonly elements: Element[];
 
     constructor(data:Data){
-        this.params = data.params;
         this.users = data.users;
         this.elements = data.elements;
     }
@@ -37,12 +35,12 @@ class Solver{
         // sort them by sum
         
         cSpace.sort((a, b) => (a.weights.reduce((a,b)=>a+b) > b.weights.reduce((a,b)=>a+b) ? -1 : 1));
-        let goodPicks:Row[] = cSpace.slice(0, this.params.depth);
+        let goodPicks:Row[] = cSpace.slice(0, this.users.length*4);
 
-        let it = new Combinatorics.Combination(goodPicks, this.params.length);
+        let it = new Combinatorics.Combination(goodPicks, this.users.length);
         let sols:Solution[] = [...it].map((el:Row[])=>(createSolution(el)))
 
-        return sols.filter((el)=>(el.score.fairness <= this.params.fairness)).sort((a,b) => (a.score.sum > b.score.sum ? -1 : 1)) // filter out if delta is bigger than tolerance
+        return sols.sort((a,b) => (a.score.sum > b.score.sum ? -1 : 1)) // filter out if delta is bigger than tolerance
     }
 }
 
