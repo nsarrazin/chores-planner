@@ -2,14 +2,17 @@ import * as React from 'react';
 import { Buttons } from './widgets/Buttons';
 import { Button, Box } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { socket } from '../context/socket';
+import { SpongeIcon } from './SpongeIcon';
 
 import { Typography } from '@mui/material';
 
+import { Parameters } from './widgets/Parameters';
+
 import { ElementsManager } from './elements/ElementsManager';
-import { Element, Data, User } from '../types';
+import { Element, Data, User, Params, Solution } from '../types';
 import { PreferencesManager } from './preferences/PreferencesManager';
 import { ModalResult } from './Modal';
+import { solve } from '../solver/solver';
 
 const useStyles = makeStyles({
     input:{
@@ -28,18 +31,25 @@ const useStyles = makeStyles({
     }
 })
 
-let defaultElement:Element = {name:"task", color:"#836E87", index:0}
-let defaultUser:User = {name:"user", index:0, preferences: [defaultElement]}
-    
+let defaultElements: Element[] = [  {name:"Kitchen", color:"#836e87", index:0},
+                                    {name:"Shower", color:"#9f7a8e", index:1},
+                                    {name:"Garbage", color:"#ad7883", index:2}]
+
+let defaultUsers: User[] = [{name:"Alice", index:0, preferences:defaultElements},
+                            {name:"Bob", index:1, preferences:defaultElements},
+                            {name:"Charlie", index:2, preferences:defaultElements}]
+
 export const MainPage = () => {
     const classes = useStyles();
 
-    const [users, setUsers] = React.useState<User[]>([{name:"user", index:0, preferences: [{name:"task", color:"#836E87", index:0}]}])
-    const [elements, setElements] = React.useState<Element[]>([{name:"task 1", color:"#836E87", index:0}])
+    const [users, setUsers] = React.useState<User[]>(defaultUsers)
+    const [elements, setElements] = React.useState<Element[]>(defaultElements)
+    
+    const [params, setParams] = React.useState<Params>({fairness:2, length:3, depth:20})
     const [modalOpen, setModalOpen] = React.useState(false);
+    const [sols, setSols] = React.useState<Solution[]>();
     
-    
-    function updatePrefs(){
+    function onUpdateUsers(){
         if (users.length>0){
             let newUsers = [...users];
 
@@ -57,7 +67,6 @@ export const MainPage = () => {
                             newUsers[i].preferences = arr
                         }
                     }
-
                 if (deltaCols > 0){ // if cols need to be added, add elements corresponding
                     for (let n = 0; n < deltaCols; n++) {
                             for (let j = newUsers[i].preferences.length; j < elements.length; j++) {
@@ -65,64 +74,66 @@ export const MainPage = () => {
                             }                
                         }
                     }
+                }        
+                let elementsDict: {[name:number] : Element} = {};
+                for (let i = 0; i < elements.length; i++) {
+                    elementsDict[elements[i].index] = elements[i]
+                }
+                // check for updated elements
+                for (let i = 0; i < newUsers.length; i++) {
+                    for (let j = 0; j < newUsers[i].preferences.length; j++) {
+                        newUsers[i].preferences[j] = elementsDict[newUsers[i].preferences[j].index]
+                    }            
                 }
                 setUsers(newUsers)
             }
         }
         
-    
-    function updateElements(){
-        let newUsers = [...users];
-        
-        let elementsDict: {[name:number] : Element} = {};
-        for (let i = 0; i < elements.length; i++) {
-            elementsDict[elements[i].index] = elements[i]
-        }
-        // check for updated elements
-        for (let i = 0; i < newUsers.length; i++) {
-            for (let j = 0; j < newUsers[i].preferences.length; j++) {
-                newUsers[i].preferences[j] = elementsDict[newUsers[i].preferences[j].index]
-            }            
-        }
-        setUsers(newUsers)
-    }
-    
-    function updateIndexes(){
+    function onUpdateInputs(){
         for (let i = 0; i < elements.length; i++) {
             elements[i].index = i        
         }
         for (let j = 0; j < users.length; j++) {
             users[j].index = j
-            
         }
+        
+        let val = Math.max(elements.length, users.length);
+
+        setParams({...params, depth:4*val, length:val})
     }
 
     function handlePush(){
-        let data:Data={users:users, elements:elements};
-        socket.emit("request", data);
+        let data:Data={users:users, elements:elements, params:params};
+        setSols(solve(data));
         setModalOpen(true);
     }
     
-    React.useEffect(updateIndexes, [users, elements]);
-    React.useEffect(updatePrefs, [elements]);
-    React.useEffect(updateElements, [elements]);
+    React.useEffect(onUpdateInputs, [users, elements]);
+    React.useEffect(onUpdateUsers, [elements]);
     
     let PreferencesManagerProps = { users:users, setUsers:setUsers, elements:elements}
     return (
         <div>
-            <Typography variant="h2" className={classes.title}>
-                Chores Planner
-            </Typography>
+            <Box >
+                <SpongeIcon/>
+                <Typography variant="h2" className={classes.title}>
+                    Chores Planner
+                </Typography>
+            </Box>
             <Buttons users={users} setUsers={setUsers} elements={elements} setElements={setElements}/>
             <Box display="flex" justifyContent="space-around">
                 <ElementsManager elements={elements} setElements={setElements}/>
-                <PreferencesManager {...PreferencesManagerProps} />
+                <Box flexGrow={3}>
+                    <PreferencesManager {...PreferencesManagerProps} />
+                    <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" paddingRight="10vw">
+                        <Parameters params={params} setParams={setParams}/>
+                        <Box>
+                        <Button variant="contained" onClick={handlePush}>Push</Button>
+                        </Box>
+                    </Box>
+                </Box>
             </Box>
-            <Box display="flex" justifyContent="center">
-                <Button variant="contained" onClick={handlePush}>Push</Button>
-            </Box>
-            <ModalResult open={modalOpen} callbackClose={()=>setModalOpen(false)}/>
-
+            {sols !== undefined && <ModalResult open={modalOpen} callbackClose={()=>setModalOpen(false)} sols={sols} users={users}/>}
         </div>
     )
 }

@@ -18,7 +18,7 @@ export const PreferencesManager = (props:PreferencesManagerProps) => {
     }
     
     return (
-    <Box display="flex">
+    <Box display="flex" justifyContent="center">
         {props.users.map((user,idx)=>(
             <PreferenceWidget user={user}
                                 setUser={(newUser:User)=>(setUser(idx, newUser))}

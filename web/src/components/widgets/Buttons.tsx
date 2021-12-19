@@ -54,7 +54,7 @@ export const Buttons = (props:ButtonsProps)=>{
         newElements.push({name: "Task" + toAdd,
                           color:scale[idx % scale.length],
                           index:idx})
-        
+
         props.setElements(newElements);
     }
 

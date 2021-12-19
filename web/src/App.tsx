@@ -27,7 +27,7 @@ const useStyles = makeStyles({
     borderStyle:"solid",
     padding:"4px",
     height:"fit-content",
-    borderColor:"#DDCA7D"
+    borderColor:"#EADEAE"
   }
 });
 
@@ -35,10 +35,10 @@ const theme = createTheme({
   palette: {
     mode: "dark",
     text: {
-      primary: '#DDCA7D',
+      primary: '#EADEAE',
     },
     primary: {
-      main: "#DDCA7D"
+      main: "#EADEAE"
     },
     secondary: {
       main: "#9A879D"
@@ -46,7 +46,7 @@ const theme = createTheme({
   },
   typography: {
     allVariants: {
-      color: "#DDCA7D"
+      color: "#EADEAE"
     },
 
   },

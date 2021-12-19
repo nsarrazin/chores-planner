@@ -4,12 +4,11 @@ import { Box, TextField } from '@mui/material';
 import { PopoverPicker } from '../widgets/PopoverPicker';
 
 export type ElementPickerProps ={
-    index: number;
     element: Element;
     setElement: (element:Element) => void;
 }
 
-export const ElementPicker = ({index, element, setElement}: ElementPickerProps) => {
+export const ElementPicker = ({element, setElement}: ElementPickerProps) => {
     function setColor(color:string){
         setElement({...element, color:color});
     }

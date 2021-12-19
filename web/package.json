@@ -22,6 +22,7 @@
     "@types/react-redux": "^7.1.20",
     "chroma-js": "^2.1.2",
     "faker": "^5.5.3",
+    "js-combinatorics": "^1.5.4",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-colorful": "^5.5.1",

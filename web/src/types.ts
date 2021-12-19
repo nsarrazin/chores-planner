@@ -16,25 +16,29 @@ export type Element = {
 export type Data = {
     users: User[],
     elements: Element[],
-    params?: Params
+    params: Params
   }
 
 // params for the solver
-type Params = {
+export type Params = {
     fairness: number,
     length: number,
     depth: number
-    fairFirst: boolean
 }
 
-// a task with a weight based on preferences, used by solver, extends Element
-export type Task = Element & {
-    weight: number,
+export type Row = {
+    elements : Element[],
+    weights : number[]
 }
- 
+
 // some values computed for a solution
 export type Score = {
     sum: number
     fairness: number,
     scores: number[],
+}
+
+export type Solution = {
+    planning : Row[],
+    score: Score,
 }

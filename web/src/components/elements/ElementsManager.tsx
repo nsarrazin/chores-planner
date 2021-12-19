@@ -8,12 +8,11 @@ import makeStyles from '@mui/styles/makeStyles';
 const useStyles = makeStyles({
     paper: {
         paddingBottom:"1rem",
-        borderColor:"#DDCA7D",
+        borderColor:"#EADEAE",
         borderStyle:"solid",
         borderWidth:"1.5px",
         marginLeft:"2.5vw"
   },
-  
 });
 
 export type ElementsManagerProps = {
@@ -41,7 +40,7 @@ export const ElementsManager = ({elements, setElements}: ElementsManagerProps) =
                     </List>
                     {elements.map((el, idx)=>(
                         <ListItem key={idx}>
-                            <ElementPicker index={idx} element={el} 
+                            <ElementPicker element={el} 
                             setElement={(newEl:Element) => {setElement(idx, newEl)}}
                             />
                         </ListItem>
