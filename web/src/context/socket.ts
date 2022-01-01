@@ -8,10 +8,10 @@ function getBaseUrl() {
 
 let SOCKET_URL = "";
 
-if (process.env.NODE_ENV === 'production' ){
+if (process.env.NODE_ENV === 'production') {
     SOCKET_URL = "ws://" + getBaseUrl();
 }
-else{
+else {
     SOCKET_URL = "ws://localhost:5000/";
 }
 

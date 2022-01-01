@@ -16,7 +16,7 @@ export type Element = {
 export type Data = {
     users: User[],
     elements: Element[],
-  }
+}
 
 // params for the solver
 export type Params = {
@@ -26,8 +26,8 @@ export type Params = {
 }
 
 export type Row = {
-    elements : Element[],
-    weights : number[]
+    elements: Element[],
+    weights: number[]
 }
 
 // some values computed for a solution
@@ -38,6 +38,6 @@ export type Score = {
 }
 
 export type Solution = {
-    planning : Row[],
+    planning: Row[],
     score: Score,
 }

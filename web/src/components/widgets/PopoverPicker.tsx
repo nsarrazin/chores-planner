@@ -4,8 +4,8 @@ import { HexColorPicker } from "react-colorful";
 import useClickOutside from "./useClickOutside";
 
 type PopoverPickerProps = {
-    color:string,
-    onChange:(newColor:string) => void
+  color: string,
+  onChange: (newColor: string) => void
 }
 export const PopoverPicker = ({ color, onChange }: PopoverPickerProps) => {
   const popover = useRef<HTMLDivElement>(null);
@@ -23,7 +23,7 @@ export const PopoverPicker = ({ color, onChange }: PopoverPickerProps) => {
       />
 
       {isOpen && (
-        <div className="popover" ref={popover} style={{zIndex:"999"}}>
+        <div className="popover" ref={popover} style={{ zIndex: "999" }}>
           <HexColorPicker color={color} onChange={onChange} />
         </div>
       )}
