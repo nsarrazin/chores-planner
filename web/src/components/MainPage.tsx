@@ -114,10 +114,7 @@ export const MainPage = () => {
         <div>
             <Box display="flex" flexDirection="row" justifyContent="center">
                 <Typography variant="h2" className={classes.title}>
-                    <LocalLaundryServiceIcon />
-                </Typography>
-                <Typography variant="h2" className={classes.title}>
-                    Chores Planner
+                    Planner
                 </Typography>
             </Box>
             <Buttons users={users} setUsers={setUsers} elements={elements} setElements={setElements} />

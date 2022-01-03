@@ -4,6 +4,8 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { SocketContext, socket } from './context/socket';
 
 import { MainPage } from './components/MainPage';
+import { Lobby } from './components/Lobby';
+
 import './App.css';
 import '@fontsource/roboto/400.css';
 
@@ -54,13 +56,15 @@ const theme = createTheme({
 
 
 const App = () => {
+  const [inRoom, setInRoom] = React.useState<boolean>(false);
+
   const classes = useStyles();
 
   return (
     <ThemeProvider theme={theme}>
       <SocketContext.Provider value={socket}>
         <div className={classes.root}>
-          <MainPage />
+          {inRoom ? <MainPage /> : <Lobby setInRoom={setInRoom} />}
         </div>
       </SocketContext.Provider>
     </ThemeProvider>

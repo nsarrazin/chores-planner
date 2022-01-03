@@ -23,6 +23,7 @@
     "chroma-js": "^2.1.2",
     "faker": "^5.5.3",
     "js-combinatorics": "^1.5.4",
+    "nanoid": "^3.1.30",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-colorful": "^5.5.1",
