@@ -1,21 +1,34 @@
 // user
 export type User = {
     name: string;
+    sid: string;
+    avatarIdx: number;
     index: number;
-    preferences: Element[]
+    preferences: Task[]
+    isReady: boolean;
 }
 
 // Task, used by front-end
-export type Element = {
+export type Task = {
     name: string;
     color: string;
-    index: number;
+    id: number;
 }
 
+export type LobbyParams = {
+    seeAll:boolean;
+}
+
+export type Room = {
+    key: string;
+    users: User[];
+    tasks: Task[];
+    params: LobbyParams;
+}
 // Data passed to back-end
 export type Data = {
     users: User[],
-    elements: Element[],
+    elements: Task[],
 }
 
 // params for the solver
@@ -26,7 +39,7 @@ export type Params = {
 }
 
 export type Row = {
-    elements: Element[],
+    elements: Task[],
     weights: number[]
 }
 

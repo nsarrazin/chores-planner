@@ -1,9 +1,9 @@
-import { Element, Data, User, Params, Row, Solution, Score } from '../types';
+import { Task, Data, User, Params, Row, Solution, Score } from '../types';
 import * as Combinatorics from 'js-combinatorics';
 
 class Solver {
     readonly users: User[];
-    readonly elements: Element[];
+    readonly elements: Task[];
 
     constructor(data: Data) {
         this.users = data.users;
@@ -11,7 +11,7 @@ class Solver {
     }
 
     // turn a list of element into a Row with weights
-    getRowFromArray(arr: Element[]): Row {
+    getRowFromArray(arr: Task[]): Row {
         let newRow: Row = {
             elements: [],
             weights: [],
@@ -28,7 +28,7 @@ class Solver {
 
     getCombinationSpace(): Row[] {
         let it = new Combinatorics.Permutation(this.elements, this.users.length);
-        return [...it].map((el: Element[]) => (this.getRowFromArray(el)))
+        return [...it].map((el: Task[]) => (this.getRowFromArray(el)))
     }
 
     getSolutions(cSpace: Row[]): Solution[] {
@@ -66,8 +66,8 @@ function createSolution(solution: Row[]) {
     return { score: score, planning: solution }
 }
 
-function getWeight(user: User, el: Element) {
-    return user.preferences.length - user.preferences.findIndex(x => x.index === el.index);
+function getWeight(user: User, el: Task) {
+    return user.preferences.length - user.preferences.findIndex(x => x.id === el.id);
 }
 
 export function solve(data: Data) {

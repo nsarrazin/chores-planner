@@ -5,8 +5,8 @@ WORKDIR /web
 COPY web/package.json package.json
 RUN npm install
 
-COPY web/src src/
-COPY web/public public/
+COPY web/src src
+COPY web/public public
 RUN npm run build 
 
 

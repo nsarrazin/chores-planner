@@ -3,11 +3,13 @@ import makeStyles from '@mui/styles/makeStyles';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { SocketContext, socket } from './context/socket';
 
-import { MainPage } from './components/MainPage';
+// import { MainPage } from './components/MainPage';
+import { SharedRoom } from './components/SharedRoom';
 import { Lobby } from './components/Lobby';
 
 import './App.css';
 import '@fontsource/roboto/400.css';
+import { MainPage } from './components/MainPage';
 
 const useStyles = makeStyles({
   input: {
@@ -19,7 +21,6 @@ const useStyles = makeStyles({
     marignTop: "5vh"
   },
   root: {
-    background: "#242331",
     minHeight: "100vh",
     minWidth: "100vw"
   },
@@ -35,36 +36,40 @@ const useStyles = makeStyles({
 
 const theme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
     text: {
-      primary: '#EADEAE',
+      primary: '#203C46',
+      secondary: '#2E4D48'
     },
     primary: {
-      main: "#EADEAE"
+      main: "#40798C"
     },
     secondary: {
-      main: "#9A879D"
+      main: "#45736B"
     },
+    background:{
+      default:"#fff",
+      paper:  "#D5E6EC"
+    }
   },
   typography: {
     allVariants: {
-      color: "#EADEAE"
+      color: "#203C46"
     },
-
-  },
+  }
 });
 
 
 const App = () => {
-  const [inRoom, setInRoom] = React.useState<boolean>(false);
 
   const classes = useStyles();
+  console.log("App Rerendering")
 
   return (
     <ThemeProvider theme={theme}>
       <SocketContext.Provider value={socket}>
         <div className={classes.root}>
-          {inRoom ? <MainPage /> : <Lobby setInRoom={setInRoom} />}
+          <MainPage/>
         </div>
       </SocketContext.Provider>
     </ThemeProvider>

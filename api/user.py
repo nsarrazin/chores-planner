@@ -1,5 +1,5 @@
 import copy
-from .task import Task
+from task import Task
 
 
 class User:
@@ -42,7 +42,7 @@ class User:
         return self._avatarIdx
 
     @avatarIdx.setter
-    def name(self, val):
+    def avatarIdx(self, val):
         if val.isdigit():
             self._name = val
         else:
@@ -66,5 +66,30 @@ class User:
         idx = [el.id for el in self._prefs].index(task_id)
         self._prefs.pop(idx)
 
+    def updateTask(self, task):
+        idx = [el.id for el in self._prefs].index(task.id)
+        self._prefs[idx] = task
+
     def toggleReady(self):
-        self.isReady = not self.isReady
+        self._isReady = not self._isReady
+
+    def shufflePrefs(self, task_id_list):
+        prefs_id = [el.id for el in self.prefs] # list of ids
+
+        new_prefs = []
+        for id in task_id_list:
+            idx_task = prefs_id.index(id)
+            new_prefs.append(self.prefs[idx_task])
+
+        self._prefs = new_prefs
+
+    @property
+    def dump(self):
+        return {
+            "sid" : self.sid,
+            "name" : self.name,
+            "avatarIdx" : self.avatarIdx,
+            "index" : self.index,
+            "preferences" : self.prefs,
+            "isReady" : self.isReady
+        }

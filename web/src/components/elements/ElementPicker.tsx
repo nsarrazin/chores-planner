@@ -1,28 +1,40 @@
 import * as React from 'react';
-import type { Element } from '../../types';
-import { Box, TextField } from '@mui/material';
+import type { Task } from '../../types';
+import { Box, TextField, Button } from '@mui/material';
 import { PopoverPicker } from '../widgets/PopoverPicker';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 export type ElementPickerProps = {
-    element: Element;
-    setElement: (element: Element) => void;
+    isAdmin:boolean;
+    task: Task;
+    setTask: (element: Task) => void;
+    remove: () => void;
 }
 
-export const ElementPicker = ({ element, setElement }: ElementPickerProps) => {
+export const ElementPicker = ({ isAdmin, task, setTask, remove }: ElementPickerProps) => {
+    const [nameLocal, setNameLocal] = React.useState<string>(task.name);
+
     function setColor(color: string) {
-        setElement({ ...element, color: color });
+        setTask({ ...task, color: color });
     }
 
     function setName(name: string) {
-        setElement({ ...element, name: name });
+        setTask({ ...task, name: name });
     }
 
     return (
         <Box display="flex" justifyContent="space-evenly">
+            {isAdmin && <Button onClick={remove}>
+                            <CancelOutlinedIcon/>
+                        </Button>
+            }  
             <TextField label="Task name"
-                value={element.name} variant="outlined"
-                onChange={(event) => (setName(event.target.value))} />
-            <PopoverPicker color={element.color} onChange={setColor} />
+                value={nameLocal} variant="outlined"
+                onChange={(event)=> setNameLocal(event.target.value)}
+                onBlur={(event) => (setName(nameLocal))} 
+                disabled={!isAdmin} 
+                />
+            <PopoverPicker isAdmin={isAdmin} color={task.color} onChange={setColor} />
         </Box>
     )
 }

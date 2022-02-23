@@ -20,7 +20,7 @@ class Task:
         return self._name
 
     @name.setter
-    def id(self, val):
+    def name(self, val):
         if type(val) == str:
             self._name = val
         else:
@@ -31,10 +31,21 @@ class Task:
         return self._color
 
     @color.setter
-    def id(self, val):
+    def color(self, val):
         if type(val) == str and val.startswith("#") and len(val) == 7:
             self._color = val
         else:
             raise TypeError(
                 "The value passed to the name setter is not a color in hex format #RRGGBB."
             )
+    
+    @property
+    def dump(self):
+        return {"id":self.id,
+                "name":self.name,
+                "color":self.color}
+
+if __name__ == "__main__":
+    task0 = Task(0, "aa", "#0000ff")
+
+    print(task0.dump)

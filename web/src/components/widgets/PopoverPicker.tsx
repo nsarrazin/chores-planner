@@ -4,27 +4,33 @@ import { HexColorPicker } from "react-colorful";
 import useClickOutside from "./useClickOutside";
 
 type PopoverPickerProps = {
+  isAdmin: boolean,
   color: string,
   onChange: (newColor: string) => void
 }
-export const PopoverPicker = ({ color, onChange }: PopoverPickerProps) => {
+export const PopoverPicker = ({ isAdmin, color, onChange }: PopoverPickerProps) => {
   const popover = useRef<HTMLDivElement>(null);
   const [isOpen, toggle] = useState(false);
+  const [colorLocal, setColor] = useState<string>(color);
 
-  const close = useCallback(() => toggle(false), []);
+  const close = useCallback(() => {onChange(colorLocal); toggle(false)}, [colorLocal]);
+
   useClickOutside(popover, close);
 
   return (
     <div className="picker">
-      <div
+      {isAdmin ? <div
         className="swatch"
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: colorLocal }}
         onClick={() => toggle(true)}
-      />
+      /> : <div
+      className="swatch"
+      style={{ backgroundColor: colorLocal }}
+    /> }
 
       {isOpen && (
         <div className="popover" ref={popover} style={{ zIndex: "999" }}>
-          <HexColorPicker color={color} onChange={onChange} />
+          <HexColorPicker color={color} onChange={setColor} />
         </div>
       )}
     </div>

@@ -1,36 +1,17 @@
 import * as React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-import makeStyles from '@mui/styles/makeStyles';
 import ListItem from '@mui/material/ListItem';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Paper, Typography, Box } from '@mui/material';
-import type { Element } from '../../../types';
-
-const useStyles = makeStyles({
-  paper: {
-    borderRadius: "1rem",
-    marginTop: "0.5rem",
-    marginBottom: "0.5rem",
-    width:"100%",
-    height:"3rem",
-    display:"flex",
-    flexDirection:"row",
-    justifyContent:"flex-start",
-    alignItems:"center"
-    
-  },
-  
-});
+import type { Task } from '../../../types';
+import { BaseListItem } from './BaseListItem';
 
 export type DraggableListItemProps = {
-  item:Element;
+  item:Task;
   index: number;
 };
 
 
-const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
-  const classes = useStyles();
+const DraggableListItem = ({item, index }: DraggableListItemProps) => {
   return (
     <Draggable draggableId={index.toString()} index={index}>
     {(provided, snapshot) => (
@@ -40,12 +21,7 @@ const DraggableListItem = ({ item, index }: DraggableListItemProps) => {
             {...provided.dragHandleProps}
             sx={{padding:0}}
           >
-          <Paper className={classes.paper} sx={{backgroundColor:item.color}}  elevation={5}>
-            <Box paddingRight={"2rem"} paddingLeft={"1rem"}>
-              <DragIndicatorIcon color="primary"/>
-            </Box>
-              <Typography>{item.name} </Typography>
-          </Paper>
+          <BaseListItem item={item} editable/>
         </ListItem>
       )}
     </Draggable>
